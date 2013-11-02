@@ -1,0 +1,18 @@
+(source melpa)
+
+(depends-on "cask")
+(depends-on "dash")
+(depends-on "drag-stuff")
+(depends-on "expand-region")
+(depends-on "magit")
+(depends-on "multiple-cursors")
+(depends-on "popwin")
+(depends-on "projectile")
+(depends-on "s")
+(depends-on "smex")
+(depends-on "wrap-region")
+(depends-on "yasnippet")
+
+(depends-on "python-mode")
+(depends-on "paredit")
+(depends-on "clojure-mode")
