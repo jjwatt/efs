@@ -68,7 +68,7 @@ own Python initialization.
 
 ** Lisp
 This should load elisp, scheme, cl, and clojure stuff.
-According to 
+At least, according to [[file:starter-kit-lisp.org][starter-kit-lisp.org]].
 #+BEGIN_SRC emacs-lisp
 (starter-kit-load "lisp")
 #+END_SRC
@@ -101,6 +101,5 @@ According to
   ;;    :parse-rule 'pydoc-info-python-symbol-at-point
   ;;    :doc-spec
   ;;    '(("(python)Index" pydoc-info-lookup-transform-entry)
-  ;;      ("(TARGETNAME)Index" pydoc-info-lookup-transform-entry)))
-  
+  ;;      ("(TARGETNAME)Index" pydoc-info-lookup-transform-entry)))  
 #+END_SRC
