@@ -10,7 +10,26 @@ org is freaking out. Let's see what version of org my emacs is using.
 Yep, it's not being loaded right.  I think I want to try out cask, but
 I'm not sure if it will conflict with starter kit.  For now, I'm just
 going to install org under src and restart emacs.  Just to make sure
-it gets loaded, for now, I'll define ORG_HOME inside init.el
+it gets loaded, for now, I'll define ORG_HOME inside init.el. I'll git
+clone the latest version into =.emacs.d/src/org-mode= and point
+ORG_HOME there.
+
+#+BEGIN_SRC sh
+git clone git://orgmode.org/org-mode.git $HOME/.emacs.d/src/org-mode
+#+END_SRC
+
+You should at least =make autoloads= in org-mode.
+
+#+BEGIN_SRC sh
+cd ~/.emacs.d/src/org-mode
+make autoloads
+#+END_SRC
+
+You can point org-mode's make at a different emacs with:
+
+#+BEGIN_SRC sh
+make EMACS=~/local/bin/emacs-latest autoloads
+#+END_SRC
 
 #+BEGIN_SRC emacs-lisp
 (defvar my-home (getenv "HOME"))
