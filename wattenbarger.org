@@ -1,0 +1,15 @@
+#+TITLE: Jesse Wattenbarger Customizations
+#+OPTIONS: toc:2 num:nil ^:nil
+
+* Trying this out
+Here I'm just trying to get started with this new config using emacs24-starter kit literate programming style.
+I'm a little confused already because my normal keybindings aren't working. Ah, apparently org is freaking out. Let's see what version of org my emacs is using.
+
+Yep, it's not being loaded right.
+I think I want to try out cask, but I'm not sure if it will conflict with starter kit.
+For now, I'm just going to install org under src and restart emacs.
+Just to make sure it gets loaded, for now, I'll define ORG_HOME inside init.el
+
+#+BEGIN_SRC elisp
+(setenv "ORG_HOME" "/home/wattenbarger/.emacs.d/src/org-mode")
+#+END_SRC
