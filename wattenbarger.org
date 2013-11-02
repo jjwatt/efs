@@ -38,6 +38,7 @@ make EMACS=~/local/bin/emacs-latest autoloads
 
 #+BEGIN_SRC emacs-lisp
 (setenv "ORG_HOME" (expand-file-name ".emacs.d/src/org-mode" my-home))
+(defvar my-org-home (getenv "ORG_HOME"))
 #+END_SRC
 
 * Does org-mode work better now?
@@ -153,3 +154,220 @@ At least, according to [[file:starter-kit-lisp.org][starter-kit-lisp.org]].
   ;;    '(("(python)Index" pydoc-info-lookup-transform-entry)
   ;;      ("(TARGETNAME)Index" pydoc-info-lookup-transform-entry)))  
 #+END_SRC
+
+* Org-mode
+Arguably the most important for me. In my previous config, I
+autoloaded files from an init.d directory under my .emacs.d. I'll just
+start ripping pieces out of my org.el and making them work here. It
+will be a lot more organized than my current org.el.  Let's get
+started.
+
+** Load Path
+I should already have org-mode loaded by the starterkit and my
+ORG_HOME, so I shouldn't need to add it to my load path anymore. I
+want to make sure the contrib directory for org-mode is in my load
+path, though. I'll setup the mode-alist here, too (and possibly other
+top-level stuff later).
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'load-path (expand-file-name "contrib/lisp" my-org-home))
+  (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
+  ;; this probably isn't needed with the starter-kit
+  (require 'org)
+#+END_SRC
+
+** Global Org Keys
+#+BEGIN_SRC emacs-lisp
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-cc" 'org-capture)
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cb" 'org-iswitchb)
+#+END_SRC
+
+** Local Org Keys
+I'm leaving this commented for now because I haven't pulled in
+org-pomodoro yet.
+#+BEGIN_SRC emacs-lisp
+;; (local-set-key "\C-co" 'org-pomodoro)
+#+END_SRC
+
+** Org Directories and Special Files
+I use =~/org= as my base. I also have an =~/org/personal= directory
+that is encrypted, but it gets dynamically loaded in special agenda
+views which you can see later on.
+#+BEGIN_SRC emacs-lisp
+  (setq org-directory "~/org")
+  (setq org-default-notes-file (concat org-directory "/notes.org"))
+  (setq org-default-ideas-file (concat org-directory "/ideas.org"))
+  (setq org-agenda-files '("~/org"))
+  (setq org-refile-targets '((nil :maxlevel . 2)
+                             (org-agenda-files :maxlevel . 1)))
+#+END_SRC
+
+** Other Org Settings Variables
+I won't explain each setting variable right now, but I'll try to group
+them all here.
+#+BEGIN_SRC emacs-lisp
+    (setq org-log-done 'time)
+    (setq org-refile-use-outline-path 'file)
+    (setq org-refile-allow-creating-parent-nodes 'confirm)
+    (setq org-enforce-todo-dependencies t)
+    (setq org-enforce-todo-checkbox-dependencies t)
+  (setq org-agenda-dim-blocked-tasks t)
+  
+  ; Targets complete directly with IDO
+  (setq org-outline-path-complete-in-steps nil)
+  
+  ; Use IDO for both buffer and file completion and ido-everywhere to t
+  (setq org-completion-use-ido t)
+  (setq ido-everywhere t)
+  (setq ido-max-directory-size 100000)
+  (ido-mode (quote both))
+  
+  ; Use the current window when visiting files and buffers with ido
+  (setq ido-default-file-method 'selected-window)
+  (setq ido-default-buffer-method 'selected-window)
+  
+  ;; remember clocking between sessions
+  (setq org-clock-persist 'history)
+  (org-clock-persistence-insinuate)
+  
+  ;; logbook drawer and clocking
+  (setq org-log-into-drawer t)
+  (setq org-clock-into-drawer t)
+  
+  ;; archive setup
+  (setq org-archive-mark-done nil)
+  (setq org-archive-location "%s_archive::* Archived Tasks")
+#+END_SRC
+
+** Org Hooks
+If you didn't know, emacs loves hooks (as most interactive and
+programmable software should). You can add hooks for
+different modes that enable other modes, set variables, or do anything
+at all really. Here is where I setup some hooks for org-modes.
+
+I like abbrev-mode. honestly, I haven't been using auto-fill mode
+lately. I'll comment it out for now.
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'org-mode-hook (lambda () (abbrev-mode t)))
+  ;; (add-hook 'org-mode-hook 'auto-fill-mode)
+  ;; (add-hook 'org-capture-mode-hook 'auto-fill-mode)
+#+END_SRC
+
+** Org Tasks
+These can be overrided or appended per-file. But, these are my default
+tasks types.
+#+BEGIN_SRC emacs-lisp
+  ; Setup Tasks
+  (setq org-todo-keywords
+        (quote (
+        (type "NOTE(N)" "IDEA(i)" "|" "DISMISSED")
+        (sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+        (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE")
+        )))
+  (setq org-todo-keyword-faces
+        (quote (("TODO" :foreground "red" :weight bold)
+                ("NEXT" :foreground "blue" :weight bold)
+                ("DONE" :foreground "forest green" :weight bold)
+                ("WAITING" :foreground "orange" :weight bold)
+                ("HOLD" :foreground "magenta" :weight bold)
+                ("CANCELLED" :foreground "forest green" :weight bold)
+                ("PHONE" :foreground "forest green" :weight bold)
+                ("NOTE" :foreground "dark slate blue" :weight bold)
+                ("IDEA" :foreground "yellow1" :weight bold))))
+#+END_SRC
+** Capture Templates
+These are for quickly capturing stuff from any buffer in emacs. These
+are awesome. If you use org-mode, but have never used the capture-mode
+stuff, try it out! Mine is fairly basic right now. Notes, Ideas,
+Todos, and I added Work Journal and Journal entries because I use
+separate journal.org files for writing longer journal-like entries.
+#+BEGIN_SRC emacs-lisp
+;; capture templates
+(setq org-capture-templates
+      '(("t" "Todo" entry (file org-default-notes-file)
+        "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
+        ("n" "Note" entry (file org-default-notes-file)
+         "* NOTE %? %^G\n%U\n  %i\n  %a\n")
+        ("i" "Idea" entry (file org-default-ideas-file)
+         "* IDEA %?\n%U\n%a\n" :clock-in t :clock-resume t)
+        ("J" "Work Journal" entry
+         (file+datetree (concat org-directory "/journal.org"))
+         "* %?\nEntered on %U\n  %i\n  %a")
+        ("j" "Personal Journal" entry
+         (file+datetree (concat org-directory "/personal/journal.org"))
+         "* %?\nEntered on %U\n  %i\n  %a")
+        ("x" "X selection" entry (file org-default-notes-file)
+         "* %? \n%U\n  %i\n  %x\n")))
+#+END_SRC
+
+** Agendas
+I like most of the default agenda commands, but since I want to keep
+separate agendas for work and personal stuff, I just use hooks to bind
+resetting the =org-agenda-files= variable before building my
+agendas. Yes, I love you org-mode, I love you lisp, and I love you
+emacs.
+#+BEGIN_SRC emacs-lisp
+(setq org-agenda-custom-commands
+      '(("P" "Personal agenda"
+         agenda "Personal" ((org-agenda-files '("~/org/personal"))))
+        ("A" "Agenda for everything"
+          agenda "Everything"
+          ((org-agenda-files '("~/org" "~/org/personal"))))))
+#+END_SRC
+
+** Babel
+Here are a few config items for Babel, code blocks and literate
+programming. I'm sure this section will get bigger as I'm getting
+really into LP lately. It's one reason why I'm getting down with this
+emacs24-starter-kit joint.
+#+BEGIN_SRC emacs-lisp
+  ;; stuff for code blocks
+  (setq org-src-fontify-natively t)
+  (setq org-src-tab-acts-natively t)
+  
+  ;; load languages with babel
+  (custom-set-variables
+   '(org-babel-load-languages (quote ((emacs-lisp . t)
+                                      (R . t)
+                                      (python . t))))
+   '(org-confirm-babel-evaluate nil))
+#+END_SRC
+
+** Custom Org Functions
+*** Org Archiving
+I stole this from (TODO: insert ref). He has a great setup, and his
+literate org guide is an excellent way to get started with org-mode.
+#+BEGIN_SRC emacs-lisp
+(defun bh/skip-non-archivable-tasks ()
+  "Skip trees that are not available for archiving"
+  (save-restriction
+    (widen)
+    ;; Consider only tasks with done todo headings as archivable candidates
+    (let ((next-headline (save-excursion (or (outline-next-heading) (point-max))))
+          (subtree-end (save-excursion (org-end-of-subtree t))))
+      (if (member (org-get-todo-state) org-todo-keywords-1)
+          (if (member (org-get-todo-state) org-done-keywords)
+              (let* ((daynr (string-to-int (format-time-string "%d" (current-time))))
+                     (a-month-ago (* 60 60 24 (+ daynr 1)))
+                     (last-month (format-time-string "%Y-%m-" (time-subtract (current-time) (seconds-to-time a-month-ago))))
+                     (this-month (format-time-string "%Y-%m-" (current-time)))
+                     (subtree-is-current (save-excursion
+                                           (forward-line 1)
+                                           (and (< (point) subtree-end)
+                                                (re-search-forward (concat last-month "\\|" this-month) subtree-end t)))))
+                (if subtree-is-current
+                    subtree-end ; Has a date in this month or last month, skip it
+                  nil))  ; available to archive
+            (or subtree-end (point-max)))
+        next-headline))))
+#+END_SRC
+*** Publishing
+TODO: I'm leaving out my publishing functions for now because they
+have a lot of content-specific stuff and project names that I'd rather
+not reveal. I'll figure out a way to include some of the generic
+publishing functions later, and I keep meaning to dabble with
+org-encrypt functions at some point, anyway.
+*** Pomodoro
+TODO: Leaving Pomodoro functions out for now. I need to pull in those dependencies.
