@@ -1,4 +1,6 @@
 (source melpa)
+(source marmalade)
+(source gnu)
 
 (depends-on "cask")
 (depends-on "dash")
@@ -12,7 +14,5 @@
 (depends-on "smex")
 (depends-on "wrap-region")
 (depends-on "yasnippet")
-
-(depends-on "python-mode")
 (depends-on "paredit")
 (depends-on "clojure-mode")
