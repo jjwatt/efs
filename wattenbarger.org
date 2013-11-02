@@ -32,8 +32,14 @@ of the starter kit below. It's annoying to constantly have to
 package-install after you see it fail, so let's just use cask.
   - [[http://cask.github.io/][Cask Website]]
 
+** Cask
+Cask is a package manager for emacs. It uses the elpa package
+management in the background, but makes things like dependency
+management, package sourcing, switching things around, and even
+package building and development a little easier. This should get us
+set up.
 #+BEGIN_SRC sh
-mkdir -p $HOME/git
+mkdir -p $HOME/src
 git clone https://github.com/cask/cask.git $HOME/src/cask
 #+END_SRC
 
@@ -55,6 +61,31 @@ cask init
 Run cask install to install dependencies.
 #+BEGIN_SRC sh
 cask install
+#+END_SRC
+
+*** Cask with Other Emacs
+If you're like me and you build your own emacs from source or you have
+different emacs installed in different locations (besides
+=/usr/bin/emacs=), and especially if you go back and forth between
+different versions sometimes, you might notice that cask isn't
+installing packages for that particular version of emacs. It will use
+the default 'emacs' binary in your PATH. I looked at the cask binary,
+and it's a Python script. Luckily, I didn't have to hack it because
+cask *does* look at the EMACS environment variable to pick an emacs to
+use before settling on the one in your PATH. Just set EMACS to the
+binary path of your desired version of emacs. For me, it's in
+=~/local/bin/emacs-latest=.
+
+#+BEGIN_SRC sh
+export EMACS=$HOME/local/bin/emacs-latest
+cask install
+#+END_SRC
+
+You should probably set this in your .bashrc or .zshrc, too. Here,
+I'll set it in my emacs config.
+
+#+BEGIN_SRC emacs-lisp
+(setenv "EMACS" (expand-file-name "local/bin/emacs-latest" my-home))
 #+END_SRC
 
 * Load more of starter-kit
