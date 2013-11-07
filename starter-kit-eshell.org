@@ -28,8 +28,8 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
        (add-to-list 'eshell-command-completions-alist
                     '("gunzip" "gz\\'"))
        (add-to-list 'eshell-command-completions-alist
-                    '("tar" "\\(\\.tar|\\.tgz\\|\\.tar\\.gz\\)\\'"))
-       (add-to-list 'eshell-output-filter-functions 'eshell-handle-ansi-color)))
+                    '("tar" "\\(\\.tar|\\.tgz\\|\\.tar\\.gz\\)\\'"))))
+       ;; (add-to-list 'eshell-output-filter-functions 'eshell-handle-ansi-color)))
 #+end_src
 
 The =eshell= directory holds alias definitions and history

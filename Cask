@@ -15,7 +15,6 @@
 (depends-on "wrap-region")
 (depends-on "yasnippet")
 (depends-on "paredit")
-(depends-on "clojure-mode")
 (depends-on "solarized-theme")
 (depends-on "idle-highlight-mode")
 (depends-on "whitespace-cleanup-mode")
@@ -24,3 +23,5 @@
 (depends-on "undo-tree")
 (depends-on "ace-jump-mode")
 (depends-on "key-chord")
+(depends-on "clojure-mode")
+(depends-on "haskell-mode")

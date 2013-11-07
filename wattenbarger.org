@@ -114,7 +114,8 @@ I don't like the python-mode in starter kit. See below where I do my
 own Python initialization.
 ** Eshell
  #+BEGIN_SRC emacs-lisp
- (starter-kit-load "eshell")
+;; invalid function in latest emacs from git
+(starter-kit-load "eshell")
  #+END_SRC
 
 ** Lisp
@@ -222,32 +223,32 @@ them all here.
     (setq org-enforce-todo-dependencies t)
     (setq org-enforce-todo-checkbox-dependencies t)
   (setq org-agenda-dim-blocked-tasks t)
-  
+
   ; Targets complete directly with IDO
   (setq org-outline-path-complete-in-steps nil)
-  
+
   ; Use IDO for both buffer and file completion and ido-everywhere to t
   (setq org-completion-use-ido t)
   (setq ido-everywhere t)
   (setq ido-max-directory-size 100000)
   (ido-mode (quote both))
-  
+
   ; Use the current window when visiting files and buffers with ido
   (setq ido-default-file-method 'selected-window)
   (setq ido-default-buffer-method 'selected-window)
-  
+
   ;; remember clocking between sessions
   (setq org-clock-persist 'history)
   (org-clock-persistence-insinuate)
-  
+
   ;; logbook drawer and clocking
   (setq org-log-into-drawer t)
   (setq org-clock-into-drawer t)
-  
+
   ;; archive setup
   (setq org-archive-mark-done nil)
   (setq org-archive-location "%s_archive::* Archived Tasks")
-  
+
   ;; preserve indentation for babel (makefiles)
   (setq org-src-preserve-indentation t)
 #+END_SRC
