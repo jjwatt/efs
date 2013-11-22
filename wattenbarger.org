@@ -134,6 +134,18 @@ Let's see what this is like.
 #+BEGIN_SRC emacs-lisp
 (starter-kit-load "misc-recommended")
 #+END_SRC
+** Haskell
+Load the starter-kit haskell.
+
+Add this to your Cask.
+#+BEGIN_SRC lisp
+(depends-on "haskell-mode")
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(starter-kit-load "haskell")
+#+END_SRC
+
 * Python
 ** Basic Python Setup
 #+BEGIN_SRC emacs-lisp
@@ -386,6 +398,13 @@ publishing functions later, and I keep meaning to dabble with
 org-encrypt functions at some point, anyway.
 *** Pomodoro
 TODO: Leaving Pomodoro functions out for now. I need to pull in those dependencies.
+
+* Markdown
+Add this to your Cask.
+#+BEGIN_SRC lisp
+(depends-on "markdown-mode")
+#+END_SRC
+
 * Defaults
 Some better defaults. I'm not sure if starter-kit loads these or not yet.
 #+BEGIN_SRC emacs-lisp

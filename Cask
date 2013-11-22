@@ -25,3 +25,4 @@
 (depends-on "key-chord")
 (depends-on "clojure-mode")
 (depends-on "haskell-mode")
+(depends-on "markdown-mode")
