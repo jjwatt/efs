@@ -26,3 +26,4 @@
 (depends-on "clojure-mode")
 (depends-on "haskell-mode")
 (depends-on "markdown-mode")
+(depends-on "smartparens")

@@ -351,6 +351,7 @@ emacs24-starter-kit joint.
   ;; stuff for code blocks
   (setq org-src-fontify-natively t)
   (setq org-src-tab-acts-natively t)
+  (setq org-src-preserve-indentation t)
 
   ;; load languages with babel
   (custom-set-variables
@@ -466,8 +467,10 @@ to Cask.
 (add-hook 'prog-mode-hook 'idle-highlight-mode)
 (add-hook 'prog-mode-hook 'hl-line-mode)
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+
 ;; TODO: only turn this on for some programming modes. It keeps messing up makefiles.
 (add-hook 'before-save-hook 'whitespace-cleanup)
+(add-hook 'make-file-mode-hook 'indent-tabs-mode)
 ;; (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
