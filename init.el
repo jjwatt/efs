@@ -5,6 +5,7 @@
 ;; This is the first thing to get loaded.
 ;;
 
+(defvar my-home (getenv "HOME"))
 (setenv "ORG_HOME" (expand-file-name ".emacs.d/src/org-mode" my-home))
 
 ;; load Org-mode from source when the ORG_HOME environment variable is set
