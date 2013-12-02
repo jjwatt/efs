@@ -5,7 +5,8 @@
 ;; This is the first thing to get loaded.
 ;;
 
-(setenv "ORG_HOME" "/home/wattenbarger/.emacs.d/src/org-mode")
+(setenv "ORG_HOME" (expand-file-name ".emacs.d/src/org-mode" my-home))
+
 ;; load Org-mode from source when the ORG_HOME environment variable is set
 (when (getenv "ORG_HOME")
   (let ((org-lisp-dir (expand-file-name "lisp" (getenv "ORG_HOME"))))

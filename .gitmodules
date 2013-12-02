@@ -1,3 +1,6 @@
 [submodule "subs/base16"]
 	path = subs/base16
 	url = https://github.com/neil477/base16-emacs.git
+[submodule "subs/org-mode"]
+	path = subs/org-mode
+	url = git://orgmode.org/org-mode.git

@@ -27,3 +27,4 @@
 (depends-on "haskell-mode")
 (depends-on "markdown-mode")
 (depends-on "smartparens")
+(depends-on "solarized-theme")
