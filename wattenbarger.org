@@ -276,6 +276,7 @@ lately. I'll comment it out for now.
 
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-mode-hook (lambda () (abbrev-mode t)))
+  (add-hook 'org-mode-hook (lambda () (remove-hook 'before-save-hook 'whitespace-cleanup)))
   ;; (add-hook 'org-mode-hook 'auto-fill-mode)
   ;; (add-hook 'org-capture-mode-hook 'auto-fill-mode)
 #+END_SRC
@@ -348,19 +349,19 @@ programming. I'm sure this section will get bigger as I'm getting
 really into LP lately. It's one reason why I'm getting down with this
 emacs24-starter-kit joint.
 #+BEGIN_SRC emacs-lisp
-  ;; stuff for code blocks
-  (setq org-src-fontify-natively t)
-  (setq org-src-tab-acts-natively t)
-  (setq org-src-preserve-indentation t)
+;; stuff for code blocks
+(setq org-src-fontify-natively t)
+(setq org-src-tab-acts-natively t)
+(setq org-src-preserve-indentation t)
 
-  ;; load languages with babel
-  (custom-set-variables
-   '(org-babel-load-languages (quote ((emacs-lisp . t)
-                                      (R . t)
-                                      (python . t)
-                                      (sh . t)
-                                      (makefile . t))))
-   '(org-confirm-babel-evaluate nil))
+;; load languages with babel
+(custom-set-variables
+ '(org-babel-load-languages (quote ((emacs-lisp . t)
+                                    (R . t)
+                                    (python . t)
+                                    (sh . t)
+                                    (makefile . t))))
+ '(org-confirm-babel-evaluate nil))
 #+END_SRC
 
 ** Custom Org Functions
@@ -468,14 +469,10 @@ to Cask.
 (add-hook 'prog-mode-hook 'hl-line-mode)
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 
-;; TODO: only turn this on for some programming modes. It keeps messing up makefiles.
-(add-hook 'before-save-hook 'whitespace-cleanup)
-(add-hook 'make-file-mode-hook 'indent-tabs-mode)
-;; (add-hook 'before-save-hook 'delete-trailing-whitespace)
-
 (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
 (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
 #+END_SRC
+
 * UI
 I like a blinky cursor. I like a bigger fringe. Let's make sure we get
 maximum font-lock-decoration.
@@ -486,6 +483,18 @@ maximum font-lock-decoration.
 
 (global-font-lock-mode 1)
 (setq font-lock-maximum-decoration t)
+#+END_SRC
+
+* Whitespace
+#+BEGIN_SRC emacs-lisp
+(setq whitespace-style '(face tabs spaces trailing lines space-before-tab newline indentation empty space-after-tab space-mark tab-mark newline-mark))
+;; TODO: only turn this on for some programming modes. It keeps messing up makefiles.
+;; (add-hook 'before-save-hook 'whitespace-cleanup)
+(add-hook 'make-file-mode-hook '(lambda ()
+                                 (setq indent-tabs-mode t)
+                                  (setq org-src-preserve-indentation t)))
+;; (add-hook 'before-save-hook 'delete-trailing-whitespace)
+
 #+END_SRC
 
 * Paths
