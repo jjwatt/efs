@@ -190,11 +190,14 @@ ORG_HOME, so I shouldn't need to add it to my load path anymore. I
 want to make sure the contrib directory for org-mode is in my load
 path, though. I'll setup the mode-alist here, too (and possibly other
 top-level stuff later).
+
 #+BEGIN_SRC emacs-lisp
-  (add-to-list 'load-path (expand-file-name "contrib/lisp" my-org-home))
-  (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
-  ;; this probably isn't needed with the starter-kit
-  (require 'org)
+(add-to-list 'load-path (expand-file-name "contrib/lisp" my-org-home))
+(add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
+;; this probably isn't needed with the starter-kit
+(setq  org-insert-mode-line-in-empty-file t)
+(require 'org)
+
 #+END_SRC
 
 ** Global Org Keys
@@ -334,13 +337,25 @@ separate agendas for work and personal stuff, I just use hooks to bind
 resetting the =org-agenda-files= variable before building my
 agendas. Yes, I love you org-mode, I love you lisp, and I love you
 emacs.
+
+Define Agenda Files. By default, I use all files ending in =.org= and
+=.org.gpg=. The default place for my agenda files is the same as my
+org-directory. So any files that match this regexp in there will be
+considered for the agenda views.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-agenda-file-regexp "\\`[^.].*\\.org\\(\\.gpg\\)?\\'")
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
 (setq org-agenda-custom-commands
       '(("P" "Personal agenda"
-         agenda "Personal" ((org-agenda-files '("~/org/personal"))))
+         agenda "Personal" ((org-agenda-files '("~/org/personal"))
+                            ))
         ("A" "Agenda for everything"
           agenda "Everything"
-          ((org-agenda-files '("~/org" "~/org/personal"))))))
+          ((org-agenda-files '("~/org" "~/org/personal"))
+           ))))
 #+END_SRC
 
 ** Babel
@@ -455,6 +470,39 @@ Some better defaults. I'm not sure if starter-kit loads these or not yet.
           backup-directory-alist `(("." . ,(concat user-emacs-directory
                                                    "backups")))))
 #+END_SRC
+
+* Encryption
+Make sure epa (EasyPG) is enabled for encryption.
+
+More on encryption and encryption with org-mode here:
+[[http://orgmode.org/worg/org-tutorials/encrypting-files.html][Org Mode Encryption]]
+
+More on EasyPG in the manual:
+[[http://www.gnu.org/software/emacs/manual/html_mono/epa.html#Quick-start][EasyPG Manual]]
+
+#+BEGIN_SRC emacs-lisp
+(require 'epa-file)
+(epa-file-enable)
+#+END_SRC
+
+** Auto encrypt/decrypt files
+With the EasyPG Agent, any file that ends in =.gpg= will be
+encrypted. However, emacs modes are usually turned on based on the
+filename. So, you will want to add a mode setting to the top of all of
+your =*.org= files and any files for which you'd like to turn on
+modes. Adding file-level settings is a good idea in the first place.
+
+#+BEGIN_SRC org
+# -*- mode:org; epa-file-encrypt-to: ("me@mydomain.com") -*-
+#+END_SRC
+
+Adding epa-file-encrypt-to to the file-level settings should help
+ensure that epa doesn't keep asking for the key we want to use and the
+pass phrase for the key.
+
+I recommend setting up and using gpg-agent instead of storing
+pass phrases in the cache: [[http://www.gnupg.org/documentation/manuals/gnupg/#Invoking-GPG_002dAGENT][GnuPG Manual]]
+
 * Hooks
 There are some dependencies here. You might need to add some packages
 to Cask.
