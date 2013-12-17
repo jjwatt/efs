@@ -28,3 +28,4 @@
 (depends-on "markdown-mode")
 (depends-on "smartparens")
 (depends-on "solarized-theme")
+(depends-on "js-comint-mode")

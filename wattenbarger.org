@@ -129,6 +129,33 @@ At least, according to [[file:starter-kit-lisp.org][starter-kit-lisp.org]].
 #+BEGIN_SRC emacs-lisp
 (starter-kit-load "js")
 #+END_SRC
+
+Starter kit uses espresso-mode. I haven't used it much, but I don't
+mind giving it a shot. I can always go back to js2-mode or switch
+between the two. So, I'll leave that alone for now. But, I'll add
+js-comint for getting a js repl inside emacs. I'll set it up to use
+node.js for now. You can really use any js interpreter (e.g., Rhino,
+Spidermonkey, node.js).
+
+#+BEGIN_SRC emacs-lisp
+(require 'js-comint)
+(setq inferior-js-program-command "$HOME/local/bin/node")
+#+END_SRC
+
+I'm not sure if espresso-mode has send-sexp functions or not, so I'll
+just leave those out for now. Otherwise, js-comint recommends
+something like this.
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'js2-mode-hook '(lambda () 
+			    (local-set-key "\C-x\C-e" 'js-send-last-sexp)
+			    (local-set-key "\C-\M-x" 'js-send-last-sexp-and-go)
+			    (local-set-key "\C-cb" 'js-send-buffer)
+			    (local-set-key "\C-c\C-b" 'js-send-buffer-and-go)
+			    (local-set-key "\C-cl" 'js-load-file-and-go)
+			    ))
+#+END_SRC
+
 ** Misc-recommended
 Let's see what this is like.
 #+BEGIN_SRC emacs-lisp
