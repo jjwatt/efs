@@ -212,3 +212,18 @@ pretty \lambda's in clojure
 (font-lock-add-keywords 'lisp-mode
 			'(("(\\|)" . 'starter-kit-paren-face)))
 #+end_src
+
+** Javascript
+   :PROPERTIES:
+   :CUSTOM_ID: javascript
+   :END:
+
+pretty \lambdas in javascript.
+#+BEGIN_SRC emacs-lisp
+  (eval-after-load 'js2-mode
+    '(font-lock-add-keywords
+      'js2-mode `(("(\\<function\\>\\)"
+                       (0 (progn (compose-region (match-beginning 1)
+                                                 (match-end 1) "ƒ")
+                                 nil))))))
+#+END_SRC

@@ -108,6 +108,22 @@ I'll set it in my emacs config.
 (setenv "EMACS" (expand-file-name "local/bin/emacs-latest" my-home))
 #+END_SRC
 
+*** TODO Automatically add anything under subs to the load path
+*** But, for now
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/subs/pretty-symbols"))
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/subs/base16"))
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/subs/slime"))
+#+END_SRC
+
+
+* Pretty Symbols Mode
+
+#+BEGIN_SRC emacs-lisp
+(require 'pretty-symbols)
+(setq pretty-symbol-categories '(lambda relational logical))
+#+END_SRC
+
 * Load more of starter-kit
 ** Python
 I don't like the python-mode in starter kit. See below where I do my
@@ -127,7 +143,7 @@ At least, according to [[file:starter-kit-lisp.org][starter-kit-lisp.org]].
 
 ** Javascript
 #+BEGIN_SRC emacs-lisp
-(starter-kit-load "js")
+;; (starter-kit-load "js")
 #+END_SRC
 
 Starter kit uses espresso-mode. I haven't used it much, but I don't
@@ -139,7 +155,7 @@ Spidermonkey, node.js).
 
 #+BEGIN_SRC emacs-lisp
 (require 'js-comint)
-(setq inferior-js-program-command "$HOME/local/bin/node")
+(setq inferior-js-program-command "~/local/bin/node")
 #+END_SRC
 
 I'm not sure if espresso-mode has send-sexp functions or not, so I'll
@@ -154,6 +170,31 @@ something like this.
 			    (local-set-key "\C-c\C-b" 'js-send-buffer-and-go)
 			    (local-set-key "\C-cl" 'js-load-file-and-go)
 			    ))
+#+END_SRC
+
+*** Switching to js2-mode by default
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))
+;; (add-hook 'js-mode-hook 'moz-minor-mode)
+(add-hook 'js2-mode-hook 'pretty-symbols-mode)
+(add-hook 'js2-mode-hook 'turn-on-paredit)
+(add-hook 'js2-mode-hook 'run-starter-kit-coding-hook)
+
+;; (add-hook 'js-mode-hook 'idle-highlight)
+(setq js-indent-level 2)
+#+END_SRC
+
+*** Trying out slime and swank-js
+#+BEGIN_SRC emacs-lisp
+(global-set-key [f5] 'slime-js-reload)
+(add-hook 'js2-mode-hook
+          (lambda ()
+            (slime-js-minor-mode 1)))
+#+END_SRC
+*** Now trying skewer-mode
+#+BEGIN_SRC emacs-lisp
+(add-hook 'js2-mode-hook 'skewer-mode)
 #+END_SRC
 
 ** Misc-recommended
@@ -204,6 +245,11 @@ Add this to your Cask.
   ;;      ("(TARGETNAME)Index" pydoc-info-lookup-transform-entry)))
 #+END_SRC
 
+* Scheme and Geiser
+#+BEGIN_SRC emacs-lisp
+(setq geiser-active-implementations '(guile))
+#+END_SRC
+
 * Org-mode
 Arguably the most important for me. In my previous config, I
 autoloaded files from an init.d directory under my .emacs.d. I'll just
@@ -218,13 +264,13 @@ want to make sure the contrib directory for org-mode is in my load
 path, though. I'll setup the mode-alist here, too (and possibly other
 top-level stuff later).
 
+
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'load-path (expand-file-name "contrib/lisp" my-org-home))
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
 ;; this probably isn't needed with the starter-kit
 (setq  org-insert-mode-line-in-empty-file t)
 (require 'org)
-
 #+END_SRC
 
 ** Global Org Keys

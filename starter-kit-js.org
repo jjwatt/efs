@@ -12,6 +12,11 @@ Java-script Helpers
                    (0 (progn (compose-region (match-beginning 1) (match-end 1)
                                              "ƒ")
                              nil)))))
+(font-lock-add-keywords
+ 'js2-mode `(("\\(function *\\)("
+                   (0 (progn (compose-region (match-beginning 1) (match-end 1)
+                                             "ƒ")
+                             nil)))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -21,14 +26,15 @@ Java-script Helpers
 #+end_src
 
 #+begin_src emacs-lisp
-(autoload 'js-mode "js-mode" "Start js-mode" t)
+;; (autoload 'js "js-mode" "Start js-mode" t)
+(require 'js)
 (add-to-list 'auto-mode-alist '("\\.js$" . js-mode))
 (add-to-list 'auto-mode-alist '("\\.json$" . js-mode))
-(add-hook 'js-mode-hook 'moz-minor-mode)
+;; (add-hook 'js-mode-hook 'moz-minor-mode)
 (add-hook 'js-mode-hook 'turn-on-paredit)
 (add-hook 'js-mode-hook 'run-starter-kit-coding-hook)
 ;; (add-hook 'js-mode-hook 'idle-highlight)
-(setq espresso-indent-level 2)
+(setq js-indent-level 2)
 #+end_src
 
 #+begin_src emacs-lisp

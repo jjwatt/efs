@@ -4,3 +4,15 @@
 [submodule "subs/org-mode"]
 	path = subs/org-mode
 	url = git://orgmode.org/org-mode.git
+[submodule "subs/pomo"]
+	path = subs/pomo
+	url = git@github.com:jjwatt/pomodoro-el.git
+[submodule "subs/pretty-symbols"]
+	path = subs/pretty-symbols
+	url = https://github.com/drothlis/pretty-symbols.git
+[submodule "subs/swank-js"]
+	path = subs/swank-js
+	url = https://github.com/swank-js/swank-js.git
+[submodule "subs/slime"]
+	path = subs/slime
+	url = https://github.com/antifuchs/slime.git
