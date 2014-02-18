@@ -108,22 +108,22 @@ I'll set it in my emacs config.
 (setenv "EMACS" (expand-file-name "local/bin/emacs-latest" my-home))
 #+END_SRC
 
+** Add Other Directories to Load Path
 *** TODO Automatically add anything under subs to the load path
 *** But, for now
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/subs/pretty-symbols"))
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/subs/base16"))
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/subs/slime"))
 #+END_SRC
-
-
-* Pretty Symbols Mode
-
+** Add Theme Directories
 #+BEGIN_SRC emacs-lisp
-(require 'pretty-symbols)
-(setq pretty-symbol-categories '(lambda relational logical))
+(add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/subs/base16"))
 #+END_SRC
-
+* Pretty Symbols Mode
+#+BEGIN_SRC emacs-lisp
+(setq pretty-symbol-categories '(lambda relational logical))
+(require 'pretty-symbols)
+#+END_SRC
 * Load more of starter-kit
 ** Python
 I don't like the python-mode in starter kit. See below where I do my
@@ -173,28 +173,110 @@ something like this.
 #+END_SRC
 
 *** Switching to js2-mode by default
+**** TODO Look into why js2 mode isn't always loading
+**** TODO Look into why pretty-symbols-mode is not starting
+Looks like it's because the load-path was not getting initialized.
+No time to fix it now.
+
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))
 ;; (add-hook 'js-mode-hook 'moz-minor-mode)
-(add-hook 'js2-mode-hook 'pretty-symbols-mode)
-(add-hook 'js2-mode-hook 'turn-on-paredit)
+;; (add-hook 'js2-mode-hook 'turn-on-paredit)
 (add-hook 'js2-mode-hook 'run-starter-kit-coding-hook)
-
-;; (add-hook 'js-mode-hook 'idle-highlight)
-(setq js-indent-level 2)
+(add-hook 'js-mode-hook 'idle-highlight)
+(add-hook 'js2-mode-hook '(lambda()
+                            (pretty-symbols-mode)
+                            (smartparens-mode)
+                            (setq js-indent-level 2)
+                            (setq js2-basic-offset 2)))
 #+END_SRC
 
+*** Since pretty-symbols-mode does not appear to be working right now
+Turn function into pretty f symbol in js2-mode.
+#+BEGIN_SRC emacs-lisp
+(font-lock-add-keywords
+ 'js2-mode `(("\\<\\(function\\) *("
+              (0 (progn (compose-region (match-beginning 1)
+                                        (match-end 1) "\u0192") nil)))))
+#+END_SRC
 *** Trying out slime and swank-js
 #+BEGIN_SRC emacs-lisp
-(global-set-key [f5] 'slime-js-reload)
-(add-hook 'js2-mode-hook
-          (lambda ()
-            (slime-js-minor-mode 1)))
+;; (global-set-key [f5] 'slime-js-reload)
+;; (add-hook 'js2-mode-hook
+;;           (lambda ()
+;;             (slime-js-minor-mode 1)))
 #+END_SRC
 *** Now trying skewer-mode
 #+BEGIN_SRC emacs-lisp
 (add-hook 'js2-mode-hook 'skewer-mode)
+#+END_SRC
+
+*** js2-refactor
+#+BEGIN_SRC emacs-lisp
+;; js2-refactor
+(require 'package)
+(when (package-installed-p 'js2-refactor)
+  (eval-after-load "js2-mode"
+    '(progn
+       (js2r-add-keybindings-with-prefix "C-c C-m")
+       (define-key js2-mode-map (kbd "C-c C-g") 'js2r-add-to-globals-annotation))))
+#+END_SRC
+*** Coffee Mode
+#+BEGIN_SRC emacs-lisp
+(add-hook 'coffee-mode-hook
+          (lambda ()
+            (define-key coffee-mode-map (kbd "M-r") 'coffee-compile-buffer)
+            (define-key coffee-mode-map (kbd "M-R") 'coffee-compile-region)
+            (define-key coffee-mode-map (kbd "<tab>") 'coffee-indent)
+            (define-key coffee-mode-map (kbd "<backtab>") 'coffee-unindent)))
+(add-to-list 'auto-mode-alist '("\\.coffee$" . coffee-mode))
+(add-to-list 'auto-mode-alist '("\\.cson$" . coffee-mode))
+;; Use js2-mode for displaying compiled CS
+(setq coffee-js-mode 'js2-mode)
+;; Handle backtabs and indenting regions
+(defun coffee-indent-block ()
+  (shift-region coffee-tab-width)
+  (setq deactivate-mark nil))
+
+(defun coffee-unindent-block ()
+  (shift-region (- coffee-tab-width))
+  (setq deactivate-mark nil))
+
+(defun coffee-indent ()
+  (interactive)
+  (if (and (boundp 'ac-trigger-command-p) (ac-trigger-command-p last-command))
+      (auto-complete)
+    (if mark-active
+        (coffee-indent-block)
+      (indent-for-tab-command))))
+
+(defun coffee-unindent ()
+  (interactive)
+  (if mark-active
+      (coffee-unindent-block)
+    (progn
+      (indent-line-to (- (current-indentation) coffee-tab-width)))))
+#+END_SRC
+
+*** Skeletons
+Read more about skeletons in the Emacs Autotype manual (C-h i m a)
+***** TODO prompt for extra context exports
+#+BEGIN_SRC emacs-lisp
+(define-skeleton js-setup-repl-skel
+  "Inserts some repl setup for node."
+  nil
+  "var repl = require('repl');\n"
+  "var _ = require('lodash');\n\n"
+  "var context = repl.start({
+    prompt: '* ' + __dirname + ' > ',
+    terminal: true,
+    useColors: true,
+    input: process.stdin,
+    output: process.stdout
+    }).context;\n"
+  _
+  )
 #+END_SRC
 
 ** Misc-recommended
@@ -664,7 +746,8 @@ I go through different fonts depending on my mood. Lately, I really
 like =Meslo= fonts. You probably don't have this installed by default.
 TODO: Give instructions on installing Meslo.
 #+BEGIN_SRC emacs-lisp
-(set-frame-font "Meslo LG M DZ" t)
+;; (set-frame-font "Meslo LG M DZ" t)
+(set-frame-font "PragmataPro:pixelsize=16")
 #+END_SRC
 Otherwise, I like using =terminus= a lot. If you're on a Debian-based
 distro, you can probably get it with:

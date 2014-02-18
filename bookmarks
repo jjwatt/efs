@@ -2,7 +2,12 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("org-refile-last-stored"
+(("Node Modules"
+ (filename . "~/src/node/doc/api/modules.markdown")
+ (front-context-string . "\n    exports.cir")
+ (rear-context-string . "* r * r;\n    };\n")
+ (position . 518))
+("org-refile-last-stored"
  (filename . "~/org/next.org")
  (front-context-string . "** Mind map curr")
  (rear-context-string . "nt lwsfc_couch\n\n")
