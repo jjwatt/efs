@@ -119,6 +119,13 @@ I'll set it in my emacs config.
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/subs/base16"))
 #+END_SRC
+* Smart Parens
+#+BEGIN_SRC emacs-lisp
+;; don't always use smartparens
+(require 'smartparens)
+(setq smartparens-global-mode nil)
+#+END_SRC
+
 * Pretty Symbols Mode
 #+BEGIN_SRC emacs-lisp
 (setq pretty-symbol-categories '(lambda relational logical))
@@ -591,14 +598,28 @@ emacs24-starter-kit joint.
 (setq org-src-preserve-indentation t)
 
 ;; load languages with babel
-(custom-set-variables
- '(org-babel-load-languages (quote ((emacs-lisp . t)
+(org-babel-do-load-languages
+ (quote org-babel-load-languages)
+ (quote ((emacs-lisp . t)
                                     (R . t)
                                     (python . t)
                                     (sh . t)
                                     (dot . t)
+                                    (ditaa . t)
+                                    (ruby . t)
+                                    (gnuplot . t)
+                                    (clojure . t)
+                                    (ledger . t)
+                                    (org . t)
+                                    (plantuml . t)
+                                    (latex . t)
                                     (makefile . t))))
- '(org-confirm-babel-evaluate nil))
+;; Do not prompt to confirm evaluation
+(setq org-confirm-babel-evaluate nil)
+
+;; Use fundamental mode when editing plantuml blocks
+(add-to-list 'org-src-lang-modes (quote ("plantuml" . fundamental)))
+
 #+END_SRC
 
 ** Custom Org Functions
@@ -630,11 +651,83 @@ literate org guide is an excellent way to get started with org-mode.
         next-headline))))
 #+END_SRC
 *** Publishing
-TODO: I'm leaving out my publishing functions for now because they
-have a lot of content-specific stuff and project names that I'd rather
-not reveal. I'll figure out a way to include some of the generic
-publishing functions later, and I keep meaning to dabble with
-org-encrypt functions at some point, anyway.
+**** Setup
+#+BEGIN_SRC emacs-lisp
+; Inline images in HTML instead of producting links to the image
+(setq org-html-inline-images t)
+
+; Use org.css from the norang website for export document stylesheets
+;; (setq org-html-head-extra "<link rel=\"stylesheet\" href=\"http://doc.norang.ca/org.css\" type=\"text/css\" />")
+;; (setq org-html-head-include-default-style nil)
+
+; Do not generate internal css formatting for HTML exports
+;; (setq org-export-htmlize-output-type (quote css))
+; Export with LaTeX fragments
+(setq org-export-with-LaTeX-fragments t)
+; Increase default number of headings to export
+(setq org-export-headline-levels 6)
+
+; I'm lazy and don't want to remember the name of the project to publish when I modify
+; a file that is part of a project.  So this function saves the file, and publishes
+; the project that includes this file
+;
+; It's bound to C-S-F12 so I just edit and hit C-S-F12 when I'm done and move on to the next thing
+(defun bh/save-then-publish (&optional force)
+  (interactive "P")
+  (save-buffer)
+  (org-save-all-org-buffers)
+  (let ((org-html-head-extra)
+        (org-html-validation-link "<a href=\"http://validator.w3.org/check?uri=referer\">Validate XHTML 1.0</a>"))
+    (org-publish-current-project force)))
+
+(global-set-key (kbd "C-s-<f12>") 'bh/save-then-publish)
+#+END_SRC
+**** Project Exports
+#+BEGIN_SRC emacs-lisp
+(setq org-alphabetical-lists t)
+;; Explicitly load required exporters
+(require 'ox-html)
+(require 'ox-ascii)
+;; project publishing
+(setq org-publish-project-alist
+           '(("niweek-notes"
+              :base-directory "~/niweek/"
+              :publishing-directory "~/public_html"
+              :html-head "<link rel=\"stylesheet\"
+                         href=\"css/worg.css\"
+                         type=\"text/css\"/>"
+              :base-extension "org"
+              :recursive t
+              :publishing-function org-html-publish-to-html
+              :headline-levels 4             ; Just the default for this project.
+              :auto-preamble t)
+             ("niweek-static"
+              :base-directory "~/niweek/"
+              :publishing-directory "~/public_html"
+              :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
+              :recursive t
+              :publishing-function org-publish-attachment)
+             ("project-support"
+              :base-directory "~/org/ps/"
+              :publishing-directory "~/public_html"
+              :html-head "<link rel=\"stylesheet\"
+                         href=\"css/worg.css\"
+                         type=\"text/css\"/>"
+              :base-extension "org"
+              :recursive t
+              :publishing-function org-html-publish-to-html
+              :headline-levels 4
+              :with-drawers t
+              :html-html5-fancy t
+              :auto-preamble t)
+             ("project-support-static"
+              :base-directory "~/org/ps/"
+              :publishing-directory "~/public_html"
+              :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
+              :recursive t
+              :publishing-function org-publish-attachment)))
+#+END_SRC
+
 *** Pomodoro
 TODO: Leaving Pomodoro functions out for now. I need to pull in those dependencies.
 
