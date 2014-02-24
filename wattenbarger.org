@@ -179,6 +179,7 @@ Looks like it's because the load-path was not getting initialized.
 No time to fix it now.
 
 #+BEGIN_SRC emacs-lisp
+(define-abbrev-table 'js2-mode-abbrev-table '())
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))
 ;; (add-hook 'js-mode-hook 'moz-minor-mode)
@@ -186,7 +187,8 @@ No time to fix it now.
 (add-hook 'js2-mode-hook 'run-starter-kit-coding-hook)
 (add-hook 'js-mode-hook 'idle-highlight)
 (add-hook 'js2-mode-hook '(lambda()
-                            (pretty-symbols-mode)
+                            ;; (pretty-symbols-mode)
+                            (abbrev-mode)
                             (smartparens-mode)
                             (setq js-indent-level 2)
                             (setq js2-basic-offset 2)))
@@ -209,7 +211,8 @@ Turn function into pretty f symbol in js2-mode.
 #+END_SRC
 *** Now trying skewer-mode
 #+BEGIN_SRC emacs-lisp
-(add-hook 'js2-mode-hook 'skewer-mode)
+;; (when (package-installed-p 'skewer-mode))
+;; (add-hook 'js2-mode-hook 'skewer-mode)
 #+END_SRC
 
 *** js2-refactor
@@ -259,11 +262,11 @@ Turn function into pretty f symbol in js2-mode.
       (indent-line-to (- (current-indentation) coffee-tab-width)))))
 #+END_SRC
 
-*** Skeletons
+*** Skeletons and Templates
 Read more about skeletons in the Emacs Autotype manual (C-h i m a)
 ***** TODO prompt for extra context exports
 #+BEGIN_SRC emacs-lisp
-(define-skeleton js-setup-repl-skel
+(define-skeleton jwatt/js-setup-repl-skel
   "Inserts some repl setup for node."
   nil
   "var repl = require('repl');\n"
@@ -277,6 +280,61 @@ Read more about skeletons in the Emacs Autotype manual (C-h i m a)
     }).context;\n"
   _
   )
+
+(define-skeleton jwatt/js-require-skel
+  "Inserts a require."
+  "Require: "
+  "var " _ " = require('" str "');"
+)
+
+(define-skeleton jwatt/js-fn-skel
+  "Insert an anonymous function."
+  nil
+  "function("
+  ("Var:" str ", ")
+  & -2
+  ") {" ?\n
+  > _ ?\n
+  >"}")
+
+(define-skeleton jwatt/js-console-log
+  "Insert a console.log()"
+  nil
+  > "console.log("_ ");")
+
+
+(require 'tempo)
+(setq tempo-interactive t)
+(defvar tempo-initial-pos nil)
+(defadvice tempo-insert (around tempo-insert-pos act)
+  "Define initial position."
+  (if (eq element '~)
+      (setq tempo-initial-pos (point-marker))
+    ad-do-it))
+(defadvice tempo-insert-template (around tempo-insert-template-pos act)
+  "Set initial position when defined."
+  (setq tempo-initial-pos nil)
+  ad-do-it
+  (if tempo-initial-pos
+      (progn
+        (put template 'no-self-insert t)
+        (goto-char tempo-initial-pos))
+    (put template 'no-self-insert nil)))
+
+(defvar js-tempo-tags nil)
+(tempo-define-template "js-if"
+                       '(> "if (" ~ ") {" n>
+                           > n
+                           "}" > n>
+                           )
+                       "if"
+                       "Insert a js if statement"
+                       'js-tempo-tags)
+
+(define-abbrev js2-mode-abbrev-table "8req" "" 'jwatt/js-require-skel)
+(define-abbrev js2-mode-abbrev-table "8fn" "" 'jwatt/js-fn-skel)
+(define-abbrev js2-mode-abbrev-table "8l" "" 'jwatt/js-console-log)
+(define-abbrev js2-mode-abbrev-table "8if" "" 'tempo-template-js-if)
 #+END_SRC
 
 ** Misc-recommended
@@ -294,6 +352,14 @@ Add this to your Cask.
 
 #+BEGIN_SRC emacs-lisp
 (starter-kit-load "haskell")
+#+END_SRC
+
+* YASnippet setup
+#+BEGIN_SRC emacs-lisp
+(require 'dropdown-list)
+(setq yas-prompt-functions '(yas-dropdown-prompt
+                             yas-ido-prompt
+                             yas-completing-prompt))
 #+END_SRC
 
 * Python
@@ -530,6 +596,7 @@ emacs24-starter-kit joint.
                                     (R . t)
                                     (python . t)
                                     (sh . t)
+                                    (dot . t)
                                     (makefile . t))))
  '(org-confirm-babel-evaluate nil))
 #+END_SRC

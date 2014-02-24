@@ -15,4 +15,4 @@
 	url = https://github.com/swank-js/swank-js.git
 [submodule "subs/slime"]
 	path = subs/slime
-	url = https://github.com/antifuchs/slime.git
+	url = https://github.com/slime/slime.git
