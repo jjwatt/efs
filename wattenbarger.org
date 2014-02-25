@@ -524,14 +524,14 @@ tasks types.
         (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE")
         )))
   (setq org-todo-keyword-faces
-        (quote (("TODO" :foreground "red" :weight bold)
-                ("NEXT" :foreground "blue" :weight bold)
-                ("DONE" :foreground "forest green" :weight bold)
+        (quote (("TODO" :foreground "tomato" :weight bold)
+                ("NEXT" :foreground "wheat" :weight bold)
+                ("DONE" :foreground "spring green" :weight bold)
                 ("WAITING" :foreground "orange" :weight bold)
                 ("HOLD" :foreground "magenta" :weight bold)
-                ("CANCELLED" :foreground "forest green" :weight bold)
-                ("PHONE" :foreground "forest green" :weight bold)
-                ("NOTE" :foreground "dark slate blue" :weight bold)
+                ("CANCELLED" :foreground "dim gray" :weight bold)
+                ("PHONE" :foreground "orchid" :weight bold)
+                ("NOTE" :foreground "dark turquoise" :weight bold)
                 ("IDEA" :foreground "yellow1" :weight bold))))
 #+END_SRC
 ** Capture Templates
