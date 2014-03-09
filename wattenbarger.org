@@ -1,6 +1,17 @@
 #+TITLE: Jesse Wattenbarger Customizations
 #+OPTIONS: toc:2 num:nil ^:nil
 
+* Jesse Wattenbarger's Pseudo-literate Emacs Configuration
+I'm using emacs24-starterkit for now. I'm not sure if I'll stick with
+it, but I do think I'll stick with a literate-style config. I keep
+coming back to this as my favorite emacs config.
+
+I haven't taken the time to learn the machinery of what exactly
+starterkit does yet. I'm sure there are ways to selectively export and
+load code blocks. I'll document them here if I ever need to do
+that. For now, assume all babel emacs-lisp blocks in this file get tangled into
+elisp startup files and loaded by emacs.
+
 * Trying this out
 Here I'm just trying to get started with this new config using
 emacs24-starter kit literate programming style.  I'm a little confused
@@ -107,6 +118,75 @@ I'll set it in my emacs config.
 #+BEGIN_SRC emacs-lisp
 (setenv "EMACS" (expand-file-name "local/bin/emacs-latest" my-home))
 #+END_SRC
+
+*** My Cask file
+Here's my Cask file included directly in my emacs org config for
+tangling. Now, I can add dependencies directly from this file and not
+worry about maintaining a separate Cask file.
+
+I'm labeling the src as lisp instead of emacs-lisp just in case
+starter kit would decide to tangle it into my .el file.
+
+Use =C-c-v-t= to tangle code blocks.
+
+#+BEGIN_SRC lisp :tangle Cask :exports code
+(source melpa)
+(source marmalade)
+(source gnu)
+
+(depends-on "cask")
+(depends-on "dash")
+(depends-on "drag-stuff")
+(depends-on "expand-region")
+(depends-on "magit")
+(depends-on "multiple-cursors")
+(depends-on "popwin")
+(depends-on "projectile")
+(depends-on "s")
+(depends-on "smex")
+(depends-on "wrap-region")
+(depends-on "yasnippet")
+(depends-on "paredit")
+(depends-on "idle-highlight-mode")
+(depends-on "whitespace-cleanup-mode")
+(depends-on "rainbow-delimiters")
+(depends-on "rainbow-mode")
+(depends-on "undo-tree")
+(depends-on "ace-jump-mode")
+(depends-on "key-chord")
+(depends-on "clojure-mode")
+(depends-on "haskell-mode")
+(depends-on "markdown-mode")
+(depends-on "smartparens")
+(depends-on "js-comint")
+(depends-on "skewer-mode")
+(depends-on "geiser")
+(depends-on "dropdown-list")
+(depends-on "color-theme-solarized")
+(depends-on "multi-term")
+(depends-on "flatland-theme")
+(depends-on "grubber-darker-theme")
+(depends-on "github-theme")
+(depends-on "gruvbox-theme")
+(depends-on "heroku-theme")
+(depends-on "inkpot-theme")
+(depends-on "moe-theme")
+(depends-on "monokai-theme")
+(depends-on "noctilux-theme")
+(depends-on "nzenburn-theme")
+(depends-on "pastels-on-dark-theme")
+(depends-on "phoenix-dark-mono-theme")
+(depends-on "phoenix-dark-pink-theme")
+(depends-on "qsimpleq-theme")
+(depends-on "reverse-theme")
+(depends-on "soothe-theme")
+(depends-on "soft-morning-theme")
+(depends-on "subatomic-theme")
+(depends-on "subatomic256-theme")
+(depends-on "sublime-themes")
+#+END_SRC
+
+**** TODO Break up Cask file into organized blocks and descriptions
 
 ** Add Other Directories to Load Path
 *** TODO Automatically add anything under subs to the load path
