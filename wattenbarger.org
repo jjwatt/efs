@@ -732,6 +732,9 @@ literate org guide is an excellent way to get started with org-mode.
 #+END_SRC
 *** Publishing
 **** Setup
+Most of this publishing setup was taken from the norang doc, and I've
+modified it to suite my needs over time.
+
 #+BEGIN_SRC emacs-lisp
 ; Inline images in HTML instead of producting links to the image
 (setq org-html-inline-images t)
@@ -762,6 +765,90 @@ literate org guide is an excellent way to get started with org-mode.
 
 (global-set-key (kbd "C-s-<f12>") 'bh/save-then-publish)
 #+END_SRC
+**** LaTeX setup and exports
+This is from the [[http://orgmode.org/worg/org-faq.html][org-mode FAQ]].
+#+BEGIN_QUOTE
+How can I get colored source code when exporting to LaTeX?
+
+As of Sun Aug 9 2009 the "current" version of Org-mode (see keeping-current-with-Org-mode-development) supports exporting source code to LaTeX using the listings package.
+
+To turn on listing export add the following to your Org-mode customization. 
+#+END_QUOTE
+#+BEGIN_SRC emacs-lisp :tangle no :exports no
+;; require org-latex so that the following variables are defined
+;; (require 'org-latex)
+
+;; tell org to use listings
+;; (setq org-export-latex-listings t)
+
+;; you must include the listings package
+;; (add-to-list 'org-export-latex-packages-alist '("" "listings"))
+
+;; if you want colored source code then you need to include the color package
+;; (add-to-list 'org-export-latex-packages-alist '("" "color"))
+#+END_SRC
+
+However, I think it's out of date compared to org-mode 8+. I found
+this link that seems a little more up-to-date:
+[[http://joat-programmer.blogspot.com/2013/07/org-mode-version-8-and-pdf-export-with.html][org-mode 8 and pdf export]]
+
+For this to work, python pygments and the LaTeX minted packages need
+to be installed.
+#+BEGIN_SRC sh :tangle no :exports code
+pip install pygments
+#+END_SRC
+
+I think Ubuntu includes the minted LaTeX package in
+texlive-latex-recommended or -extra.
+#+BEGIN_SRC emacs-lisp
+;; Include the latex-exporter
+(require 'ox-latex)
+;; Add minted to the defaults packages to include when exporting.
+(add-to-list 'org-latex-packages-alist '("" "minted"))
+;; Tell the latex export to use the minted package for source
+;; code coloration.
+(setq org-latex-listings 'minted)
+;; Let the exporter use the -shell-escape option to let latex
+;; execute external programs.
+;; This obviously and can be dangerous to activate!
+;; jwatt: I'm not sure if i need to do this.
+;; (setq org-latex-pdf-process
+;;       '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+#+END_SRC
+
+***** LaTeX pdf process
+If LaTeX exporting isn't working, then this is probably why.
+I'm trying to use latexmk because of my use of minted for source code
+and bibtex for citations. I'm not sure if a regular latex compile will
+run the right number of times.
+
+#+BEGIN_SRC emacs-lisp
+;; Use latexmk for PDF export
+(setq org-latex-pdf-process
+      (list "latexmk -pdflatex='pdflatex -shell-escape -interaction nonstopmode' -bibtex -pdf -f %f"))
+#+END_SRC
+
+***** BibTeX Setup
+#+BEGIN_SRC emacs-lisp
+;; Configure RefTeX for use with org-mode. At the end of your
+;; org-mode file you need to insert your style and bib file:
+;; \bibliographystyle{plain}
+;; \bibliography{ProbePosition}
+;; See http://www.mfasold.net/blog/2009/02/using-emacs-org-mode-to-draft-papers/
+;; (setq-default TeX-master t)
+(setq reftex-default-bibliography
+      (quote
+       ("~/Documents/default.bib")))
+(defun org-mode-reftex-setup ()
+  (load-library "reftex")
+  (and (buffer-file-name)
+       (file-exists-p (buffer-file-name))
+       (reftex-parse-all))
+  (define-key org-mode-map (kbd "C-c )") 'reftex-citation)
+  )
+(add-hook 'org-mode-hook 'org-mode-reftex-setup)
+#+END_SRC
+
 **** Project Exports
 #+BEGIN_SRC emacs-lisp
 (setq org-alphabetical-lists t)

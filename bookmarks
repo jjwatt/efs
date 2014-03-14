@@ -39,7 +39,7 @@
  (position . 813))
 ("org-capture-last-stored"
  (filename . "~/org/notes.org")
- (front-context-string . "* TODO Mess with")
- (rear-context-string . "f?referrer=4052\n")
- (position . 7903))
+ (front-context-string . "* NOTE pandoc   ")
+ (rear-context-string . "Record Schema]]\n")
+ (position . 680))
 )
