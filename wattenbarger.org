@@ -702,6 +702,22 @@ emacs24-starter-kit joint.
 
 #+END_SRC
 
+** Skeletons and Abbrevs
+#+BEGIN_SRC emacs-lisp
+(define-skeleton jwatt/org-src-name-block
+  "Insert #+name"
+  "name: "
+  > "#+name: " str
+  ?\n "#+begin_src "
+  ("headers:" str " ")
+  & -1
+  ?\n _ ?\n
+  "#+end_src"
+  )
+
+
+(define-abbrev org-mode-abbrev-table "<sn" "" 'jwatt/org-src-name-block)
+#+END_SRC
 ** Custom Org Functions
 *** Org Archiving
 I stole this from (TODO: insert ref). He has a great setup, and his
@@ -804,7 +820,7 @@ texlive-latex-recommended or -extra.
 ;; Include the latex-exporter
 (require 'ox-latex)
 ;; Add minted to the defaults packages to include when exporting.
-(add-to-list 'org-latex-packages-alist '("" "minted"))
+(add-to-list 'org-latex-packages-alist '("" "minted" "" "cite"))
 ;; Tell the latex export to use the minted package for source
 ;; code coloration.
 (setq org-latex-listings 'minted)
@@ -836,9 +852,6 @@ run the right number of times.
 ;; \bibliography{ProbePosition}
 ;; See http://www.mfasold.net/blog/2009/02/using-emacs-org-mode-to-draft-papers/
 ;; (setq-default TeX-master t)
-(setq reftex-default-bibliography
-      (quote
-       ("~/Documents/default.bib")))
 (defun org-mode-reftex-setup ()
   (load-library "reftex")
   (and (buffer-file-name)
@@ -1074,7 +1087,7 @@ like =Meslo= fonts. You probably don't have this installed by default.
 TODO: Give instructions on installing Meslo.
 #+BEGIN_SRC emacs-lisp
 ;; (set-frame-font "Meslo LG M DZ" t)
-(set-frame-font "PragmataPro:pixelsize=16")
+(set-frame-font "PragmataPro:pixelsize=20")
 #+END_SRC
 Otherwise, I like using =terminus= a lot. If you're on a Debian-based
 distro, you can probably get it with:

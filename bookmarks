@@ -2,7 +2,19 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("saybrook"
+(("DeeDoc"
+ (front-context-string . "\nmakes Python re")
+ (rear-context-string . "           \nDee\n")
+ (position . 100)
+ (filename . #1="file:///home/wattenbarger/src/Dee-0.12/Dee-0.12/DeeDoc.html")
+ (url . #1#)
+ (handler . bookmark-w3m-bookmark-jump))
+("procmtp functions"
+ (filename . "~/git/pyprocmtp/simple.org")
+ (front-context-string . "\n\nThese are func")
+ (rear-context-string . ".\n\n*** Functions")
+ (position . 25403))
+("saybrook"
  (filename . "~/org/ps/saybrook_data.org")
  (front-context-string . "\n* Notes\n** Sayb")
  (rear-context-string . "SUM %CLOCKSUM_T\n")
@@ -34,9 +46,9 @@
  (position . 518))
 ("org-refile-last-stored"
  (filename . "~/org/someday-work.org")
- (front-context-string . "** NEXT Review c")
- (rear-context-string . " stuff in root)\n")
- (position . 813))
+ (front-context-string . "** NEXT Write a ")
+ (rear-context-string . "s to s2f-client\n")
+ (position . 1253))
 ("org-capture-last-stored"
  (filename . "~/org/notes.org")
  (front-context-string . "* NOTE pandoc   ")
