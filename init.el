@@ -6,7 +6,7 @@
 ;;
 
 (defvar my-home (getenv "HOME"))
-(setenv "ORG_HOME" (expand-file-name ".emacs.d/src/org-mode" my-home))
+;; (setenv "ORG_HOME" (expand-file-name ".emacs.d/src/org-mode" my-home))
 
 ;; load Org-mode from source when the ORG_HOME environment variable is set
 (when (getenv "ORG_HOME")
@@ -20,7 +20,10 @@
  `(lambda ()
     ;; remember this directory
     (setq starter-kit-dir
-          ,(file-name-directory (or load-file-name (buffer-file-name))))
+          ,(file-name-directory
+	    ;; I moved starter-kit to the lisp dir
+	    (concat (or load-file-name (buffer-file-name))
+		    (convert-standard-filename "lisp/starter-kit"))))
     ;; only load org-mode later if we didn't load it just now
     ,(unless (and (getenv "ORG_HOME")
                   (file-directory-p (expand-file-name "lisp"

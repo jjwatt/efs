@@ -1,0 +1,12 @@
+
+* Move org/el/elc files out of the parent directory
+This shouldn't be too hard.
+I'll make a directory called 'lisp' and put it in the load path.
+Then, add the starter-kit org files to the lisp directory.
+Make sure that init.el knows to load from there.
+
+* Makefile changes
+Add a command to download and build the latest org-mode.
+Add command to download and install cask.
+Add command to tangle Cask config out of org file.
+Add a command to run cask.
