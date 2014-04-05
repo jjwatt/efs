@@ -1,6 +1,8 @@
 # Name of your emacs binary
 EMACS=emacs
 
+.PHONY: git-org
+
 BATCH=$(EMACS) --batch -Q --eval '(require (quote org))' --eval '(require (quote cl))' --eval '(setq starter-kit-dir default-directory)'
 
 FILES = starter-kit.org			\
@@ -31,3 +33,7 @@ doc/index.html:
 
 clean:
 	rm -f *.elc *.aux *.tex *.pdf starter-kit*.el starter-kit*.html doc/*html *~ .starter-kit*.part.org
+
+git-org:
+	git clone git://orgmode.org/org-mode.git
+
