@@ -1,0 +1,13 @@
+#+TITLE: Test Out new config
+#+OPTIONS: toc:2 num:nil ^:nil
+
+* Doing it
+- Just a few things to get started and make sure that this works.
+
+- Add litconfig directory to load-path
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path litconfig-dir)
+(load-theme 'wombat)
+#+END_SRC
+
+* TODO setup cask
