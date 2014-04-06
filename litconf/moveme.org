@@ -11,3 +11,8 @@
 #+END_SRC
 
 * TODO setup cask
+
+#+BEGIN_SRC emacs-lisp
+(require 'cask (expand-file-name "cask/cask.el" "~/.emacs.d"))
+(cask-initialize)
+#+END_SRC

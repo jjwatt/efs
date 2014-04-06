@@ -36,4 +36,15 @@ clean:
 
 git-org:
 	git clone git://orgmode.org/org-mode.git
+org-mode: git-org
+	cd org-mode && make autoloads
+
+cask:
+	git clone https://github.com/cask/cask.git
+
+Cask: cask
+	PATH="./cask/bin:$(PATH)" && cask init
+
+cask-install: Cask
+	./cask/bin/cask install
 

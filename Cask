@@ -33,7 +33,6 @@
 (depends-on "color-theme-solarized")
 (depends-on "multi-term")
 (depends-on "flatland-theme")
-(depends-on "grubber-darker-theme")
 (depends-on "github-theme")
 (depends-on "gruvbox-theme")
 (depends-on "heroku-theme")
