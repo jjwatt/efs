@@ -19,17 +19,15 @@
   (let* ((org-lisp-dir (expand-file-name "lisp" (getenv "ORG_HOME")))
 	 (org-contrib-dir (expand-file-name "lisp"
 					    (expand-file-name "contrib"
-							      (getenv "ORG_HOME")))))
-    (load-path (append (list org-lisp-dir org-contrib-dir)
-		       (or load-path nil)))))
-
-;; load up org-mode and org-babel
-(require 'org-install)
-(require 'ob-tangle)
+							      (getenv "ORG_HOME"))))
+	 (load-path (append (list org-lisp-dir org-contrib-dir)
+			    (or load-path nil)))))
+  (require 'org-install)
+  (require 'ob-tangle))
 
 ;; instead of starter-kit, point at a directory containing any literate org
 ;; configurations.
-(setq litconfig-dir (convert-standard-file-name "~/.emacs.d/litconf"))
+(setq litconfig-dir (convert-standard-filename "~/.emacs.d/litconf"))
 (mapc #'org-babel-load-file (directory-files litconfig-dir t "\\.org$"))
 
 ;; load the starter kit from the `after-init-hook' so all packages are loaded
