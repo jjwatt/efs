@@ -28,6 +28,20 @@ I'm grabbing some functions from starter kit in case I wan to load
 parts of the starter kit. Although, once I finish with my config, I
 don't imagine I will.
 
+** Starter Kit Dependencies
+- Ubiquitous Packages which should be loaded on startup rather than
+  autoloaded on demand since they are likely to be used in every
+  session.
+  #+name: starter-kit-load-on-startup
+  #+begin_src emacs-lisp
+    (require 'cl)
+    (require 'saveplace)
+    (require 'ffap)
+    (require 'uniquify)
+    (require 'ansi-color)
+    (require 'recentf)
+  #+end_src
+
 - Functions for loading other parts of the starter kit
   #+name: starter-kit-load
   #+begin_src emacs-lisp
@@ -161,5 +175,43 @@ It might be nice to try to group all key binding settings in this
 section. For now, it will at least contain general keybindings, and
 some more specific keybindings might still exist closer to their
 application.
+
+** Completion and Expansion
+#+begin_src emacs-lisp 
+(global-set-key (kbd "M-/") 'hippie-expand)
+#+end_src
+
+** Turn on the menu bar for exploring new modes
+#+begin_src emacs-lisp 
+(global-set-key [f1] 'menu-bar-mode)
+#+end_src
+
+** File finding
+#+begin_src emacs-lisp 
+  (global-set-key (kbd "C-x M-f") 'ido-find-file-other-window)
+  (global-set-key (kbd "C-x C-p") 'find-file-at-point)
+  (global-set-key (kbd "C-c y") 'bury-buffer)
+  (global-set-key (kbd "C-c r") 'revert-buffer)
+  (global-set-key (kbd "M-`") 'file-cache-minibuffer-complete)
+  (global-set-key (kbd "C-x C-b") 'ibuffer)
+  (global-set-key (kbd "C-x f") 'recentf-ido-find-file)  
+#+end_src
+
+** Window switching. (C-x o goes to the next window)
+#+begin_src emacs-lisp 
+(windmove-default-keybindings) ;; Shift+direction
+(global-set-key (kbd "C-x O") (lambda () (interactive) (other-window -1))) ;; back one
+(global-set-key (kbd "C-x C-o") (lambda () (interactive) (other-window 2))) ;; forward two
+#+end_src
+
+** Indentation help
+#+begin_src emacs-lisp 
+(global-set-key (kbd "C-x ^") 'join-line)
+#+end_src
+
+** If you want to be able to M-x without meta
+#+begin_src emacs-lisp 
+(global-set-key (kbd "C-x C-m") 'execute-extended-command)
+#+end_src
 
 
