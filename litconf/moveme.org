@@ -14,7 +14,7 @@
 Emacs normally just appends the custom variables lisp to the end of
 =init.el=. I'd rather keep it in a separate file.
 #+BEGIN_SRC emacs-lisp
-(setq custom-file (expand-file-name "custom.el" "~/.emacs.d")
+(setq custom-file (expand-file-name "custom.el" "~/.emacs.d"))
 #+END_SRC
 
 * Cask
