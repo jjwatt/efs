@@ -9,6 +9,7 @@ places
 .svn
 .DS_Store
 tramp
+.cask
 
 ## directories
 backups/*

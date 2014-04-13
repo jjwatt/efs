@@ -10,8 +10,7 @@
 (load-theme 'wombat)
 #+END_SRC
 
-* TODO setup cask
-
+* Cask
 #+BEGIN_SRC emacs-lisp
 (require 'cask (expand-file-name "cask/cask.el" "~/.emacs.d"))
 (cask-initialize)

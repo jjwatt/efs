@@ -25,6 +25,9 @@
   (require 'org-install)
   (require 'ob-tangle))
 
+(require 'org-install)
+(require 'ob-tangle)
+
 ;; instead of starter-kit, point at a directory containing any literate org
 ;; configurations.
 (setq litconfig-dir (convert-standard-filename "~/.emacs.d/litconf"))
