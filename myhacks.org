@@ -10,3 +10,8 @@ Add a command to download and build the latest org-mode.
 Add command to download and install cask.
 Add command to tangle Cask config out of org file.
 Add a command to run cask.
+
+* running wishlist
+  - go through sk files and pull out stuff i want
+  - look at my existing configs and pull in stuff i want
+  - everything should be organized in one file
