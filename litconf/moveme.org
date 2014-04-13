@@ -10,8 +10,156 @@
 (load-theme 'wombat)
 #+END_SRC
 
+* Customization File
+Emacs normally just appends the custom variables lisp to the end of
+=init.el=. I'd rather keep it in a separate file.
+#+BEGIN_SRC emacs-lisp
+(setq custom-file (expand-file-name "custom.el" "~/.emacs.d")
+#+END_SRC
+
 * Cask
 #+BEGIN_SRC emacs-lisp
 (require 'cask (expand-file-name "cask/cask.el" "~/.emacs.d"))
 (cask-initialize)
 #+END_SRC
+
+* Start Kit Functions
+I'm grabbing some functions from starter kit in case I wan to load
+parts of the starter kit. Although, once I finish with my config, I
+don't imagine I will.
+
+- Functions for loading other parts of the starter kit
+  #+name: starter-kit-load
+  #+begin_src emacs-lisp
+    (defun starter-kit-load (file &optional header-or-tag)
+      "Load configuration from other starter-kit-*.org files.
+    If the optional argument is the id of a subtree then only
+    configuration from within that subtree will be loaded.  If it is
+    not an id then it will be interpreted as a tag, and only subtrees
+    marked with the given tag will be loaded.
+    
+    For example, to load all of starter-kit-lisp.org simply
+    add (starter-kit-load \"lisp\") to your configuration.
+    
+    To load only the 'window-system' config from
+    starter-kit-misc-recommended.org add
+     (starter-kit-load \"misc-recommended\" \"window-system\")
+    to your configuration."
+      (let ((file (expand-file-name (if (string-match "starter-kit-.+\.org" file)
+                                        file
+                                      (format "starter-kit-%s.org" file))
+                                    starter-kit-dir)))
+        (org-babel-load-file
+         (if header-or-tag
+             (let* ((base (file-name-nondirectory file))
+                    (dir  (file-name-directory file))
+                    (partial-file (expand-file-name
+                                   (concat "." (file-name-sans-extension base)
+                                           ".part." header-or-tag ".org")
+                                   dir)))
+               (unless (file-exists-p partial-file)
+                 (with-temp-file partial-file
+                   (insert
+                    (with-temp-buffer
+                      (insert-file-contents file)
+                      (save-excursion
+                        (condition-case nil ;; collect as a header
+                            (progn
+                              (org-link-search (concat"#"header-or-tag))
+                              (org-narrow-to-subtree)
+                              (buffer-string))
+                          (error ;; collect all entries with as tags
+                           (let (body)
+                             (org-map-entries
+                              (lambda ()
+                                (save-restriction
+                                  (org-narrow-to-subtree)
+                                  (setq body (concat body "\n" (buffer-string)))))
+                              header-or-tag)
+                             body))))))))
+               partial-file)
+           file))))
+  #+end_src
+** Setting from M-x customize
+#+begin_src emacs-lisp
+  (load custom-file 'noerror)
+#+end_src
+
+** starter-kit-defuns
+The starter-kit-defuns.org file contains a
+starter-kit-coding-hook. I'm not sure if I want to keep using it, but
+I'll put it here for now.
+
+- Coding Hook
+  #+name: starter-kit-hook-functions
+  #+begin_src emacs-lisp
+  (defun starter-kit-local-column-number-mode ()
+    (make-local-variable 'column-number-mode)
+    (column-number-mode t))
+
+  (defun starter-kit-local-comment-auto-fill ()
+    (set (make-local-variable 'comment-auto-fill-only-comments) t)
+    (auto-fill-mode t))
+
+  (defun starter-kit-turn-on-save-place-mode ()
+    (setq save-place t))
+
+  (defun starter-kit-turn-on-whitespace ()
+    (whitespace-mode t))
+  #+end_src
+
+  #+name: starter-kit-add-local-column-number-mode
+  #+begin_src emacs-lisp
+  (add-hook 'starter-kit-coding-hook 'starter-kit-local-column-number-mode)
+  #+end_src
+
+  #+name: start-kit-add-local-comment-auto-fill
+  #+begin_src emacs-lisp
+  (add-hook 'starter-kit-coding-hook 'starter-kit-local-comment-auto-fill)
+  #+end_src
+
+  #+name: starter-kit-add-pretty-lambdas
+  #+begin_src emacs-lisp
+    (when (window-system)
+      (add-hook 'starter-kit-coding-hook 'starter-kit-pretty-lambdas))
+  #+end_src
+
+  #+name: starter-kit-run-starter-kit-coding-hook
+  #+begin_src emacs-lisp
+  (defun run-starter-kit-coding-hook ()
+    "Enable things that are convenient across all coding buffers."
+    (run-hooks 'starter-kit-coding-hook))
+  #+end_src
+
+- Recentf Ido Find File
+  I don't know if I use this much, either.
+
+  #+srcname: starter-kit-recentf-ido-find-file
+  #+begin_src emacs-lisp 
+  (defun recentf-ido-find-file () 
+    "Find a recent file using Ido." 
+    (interactive) 
+    (let* ((file-assoc-list 
+            (mapcar (lambda (x) 
+                      (cons (file-name-nondirectory x) 
+                            x)) 
+                    recentf-list)) 
+           (filename-list 
+            (remove-duplicates (mapcar #'car file-assoc-list) 
+                               :test #'string=)) 
+           (filename (ido-completing-read "Choose recent file: " 
+                                          filename-list 
+                                          nil 
+                                          t))) 
+      (when filename 
+        (find-file (cdr (assoc filename 
+                               file-assoc-list)))))) 
+  #+end_src 
+
+* Key Bindings
+It might be nice to try to group all key binding settings in this
+section. For now, it will at least contain general keybindings, and
+some more specific keybindings might still exist closer to their
+application.
+
+
