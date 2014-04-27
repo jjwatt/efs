@@ -230,7 +230,6 @@ top-level stuff later).
 
 
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'load-path (expand-file-name "contrib/lisp" my-org-home))
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
 ;; this probably isn't needed with the starter-kit
 (setq  org-insert-mode-line-in-empty-file t)
