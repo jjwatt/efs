@@ -45,10 +45,10 @@
  (rear-context-string . "* r * r;\n    };\n")
  (position . 518))
 ("org-refile-last-stored"
- (filename . "~/org/someday-work.org")
- (front-context-string . "** NEXT Write a ")
- (rear-context-string . "s to s2f-client\n")
- (position . 1253))
+ (filename . "~/org/todo.org")
+ (front-context-string . "** NEXT unbox mo")
+ (rear-context-string . "nt yard weeding\n")
+ (position . 4754))
 ("org-capture-last-stored"
  (filename . "~/org/notes.org")
  (front-context-string . "* NOTE pandoc   ")

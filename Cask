@@ -51,3 +51,4 @@
 (depends-on "subatomic-theme")
 (depends-on "subatomic256-theme")
 (depends-on "sublime-themes")
+(depends-on "cider")
