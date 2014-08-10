@@ -35,7 +35,9 @@ clean:
 	rm -f *.elc *.aux *.tex *.pdf starter-kit*.el starter-kit*.html doc/*html *~ .starter-kit*.part.org
 
 git-org:
-	git clone git://orgmode.org/org-mode.git
+	mkdir -p ./src
+	git clone git://orgmode.org/org-mode.git ./src/org-mode
+
 org-mode: git-org
 	cd org-mode && make autoloads
 
@@ -47,4 +49,7 @@ Cask: cask
 
 cask-install: Cask
 	./cask/bin/cask install
+
+cask-update: cask Cask
+	./cask/bin/cask update
 

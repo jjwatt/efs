@@ -15,6 +15,9 @@ apt () {
 # Silence debconf
 export DEBIAN_FRONTEND='noninteractive'
 
+apt python-software-properties
+apt make
+apt git
 # Bring in the necessary PPAs
 ppa ppa:cassou/emacs
 apt_update

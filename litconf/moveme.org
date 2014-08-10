@@ -421,7 +421,9 @@ emacs24-starter-kit joint.
                                     (org . t)
                                     (plantuml . t)
                                     (latex . t)
-                                    (makefile . t))))
+                                    ;; Was getting an ob-makefile not found.
+                                    ;; (makefile . t)
+                                    )))
 ;; Do not prompt to confirm evaluation
 (setq org-confirm-babel-evaluate nil)
 
