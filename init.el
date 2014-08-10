@@ -17,11 +17,11 @@
 
 (when (getenv "ORG_HOME")
   (let* ((org-lisp-dir (expand-file-name "lisp" (getenv "ORG_HOME")))
-	 (org-contrib-dir (expand-file-name "lisp"
-					    (expand-file-name "contrib"
-							      (getenv "ORG_HOME"))))
-	 (load-path (append (list org-lisp-dir org-contrib-dir)
-			    (or load-path nil)))))
+         (org-contrib-dir (expand-file-name "lisp"
+                                            (expand-file-name "contrib"
+                                                              (getenv "ORG_HOME"))))
+         (load-path (append (list org-lisp-dir org-contrib-dir)
+                            (or load-path nil)))))
   (require 'org-install)
   (require 'ob-tangle))
 
@@ -39,8 +39,8 @@
 ;;     ;; remember this directory
 ;;     (setq starter-kit-dir
 ;;           ,(concat
-;; 	    (file-name-directory (or load-file-name (buffer-file-name)))
-;; 		    (convert-standard-filename "lisp/starter-kit")))
+;;          (file-name-directory (or load-file-name (buffer-file-name)))
+;;                  (convert-standard-filename "lisp/starter-kit")))
 ;;     ;; only load org-mode later if we didn't load it just now
 ;;     ,(unless (and (getenv "ORG_HOME")
 ;;                   (file-directory-p (expand-file-name "lisp"
