@@ -242,7 +242,7 @@ Spidermonkey, node.js).
 
 #+BEGIN_SRC emacs-lisp
 (require 'js-comint)
-(setq inferior-js-program-command "~/local/bin/node")
+(setq inferior-js-program-command "~/bin/node")
 #+END_SRC
 
 I'm not sure if espresso-mode has send-sexp functions or not, so I'll
