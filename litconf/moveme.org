@@ -51,10 +51,10 @@ don't imagine I will.
     configuration from within that subtree will be loaded.  If it is
     not an id then it will be interpreted as a tag, and only subtrees
     marked with the given tag will be loaded.
-    
+
     For example, to load all of starter-kit-lisp.org simply
     add (starter-kit-load \"lisp\") to your configuration.
-    
+
     To load only the 'window-system' config from
     starter-kit-misc-recommended.org add
      (starter-kit-load \"misc-recommended\" \"window-system\")
@@ -104,9 +104,9 @@ The starter-kit-defuns.org file contains a
 starter-kit-coding-hook. I'm not sure if I want to keep using it, but
 I'll put it here for now.
 
-- Coding Hook
-  #+name: starter-kit-hook-functions
-  #+begin_src emacs-lisp
+*** Coding Hook
+#+name: starter-kit-hook-functions
+#+begin_src emacs-lisp
   (defun starter-kit-local-column-number-mode ()
     (make-local-variable 'column-number-mode)
     (column-number-mode t))
@@ -120,55 +120,55 @@ I'll put it here for now.
 
   (defun starter-kit-turn-on-whitespace ()
     (whitespace-mode t))
-  #+end_src
+#+end_src
 
-  #+name: starter-kit-add-local-column-number-mode
-  #+begin_src emacs-lisp
+#+name: starter-kit-add-local-column-number-mode
+#+begin_src emacs-lisp
   (add-hook 'starter-kit-coding-hook 'starter-kit-local-column-number-mode)
-  #+end_src
+#+end_src
 
-  #+name: start-kit-add-local-comment-auto-fill
-  #+begin_src emacs-lisp
+#+name: start-kit-add-local-comment-auto-fill
+#+begin_src emacs-lisp
   (add-hook 'starter-kit-coding-hook 'starter-kit-local-comment-auto-fill)
-  #+end_src
+#+end_src
 
-  #+name: starter-kit-add-pretty-lambdas
-  #+begin_src emacs-lisp
+#+name: starter-kit-add-pretty-lambdas
+#+begin_src emacs-lisp
     (when (window-system)
       (add-hook 'starter-kit-coding-hook 'starter-kit-pretty-lambdas))
-  #+end_src
+#+end_src
 
-  #+name: starter-kit-run-starter-kit-coding-hook
-  #+begin_src emacs-lisp
+#+name: starter-kit-run-starter-kit-coding-hook
+#+begin_src emacs-lisp
   (defun run-starter-kit-coding-hook ()
     "Enable things that are convenient across all coding buffers."
     (run-hooks 'starter-kit-coding-hook))
-  #+end_src
+#+end_src
 
-- Recentf Ido Find File
+*** Recentf Ido Find File
   I don't know if I use this much, either.
 
-  #+srcname: starter-kit-recentf-ido-find-file
-  #+begin_src emacs-lisp 
-  (defun recentf-ido-find-file () 
-    "Find a recent file using Ido." 
-    (interactive) 
-    (let* ((file-assoc-list 
-            (mapcar (lambda (x) 
-                      (cons (file-name-nondirectory x) 
-                            x)) 
-                    recentf-list)) 
-           (filename-list 
-            (remove-duplicates (mapcar #'car file-assoc-list) 
-                               :test #'string=)) 
-           (filename (ido-completing-read "Choose recent file: " 
-                                          filename-list 
-                                          nil 
-                                          t))) 
-      (when filename 
-        (find-file (cdr (assoc filename 
-                               file-assoc-list)))))) 
-  #+end_src 
+#+srcname: starter-kit-recentf-ido-find-file
+#+begin_src emacs-lisp 
+  (defun recentf-ido-find-file ()
+    "Find a recent file using Ido."
+    (interactive)
+    (let* ((file-assoc-list
+            (mapcar (lambda (x)
+                      (cons (file-name-nondirectory x)
+                            x))
+                    recentf-list))
+           (filename-list
+            (remove-duplicates (mapcar #'car file-assoc-list)
+                               :test #'string=))
+           (filename (ido-completing-read "Choose recent file: "
+                                          filename-list
+                                          nil
+                                          t)))
+      (when filename
+        (find-file (cdr (assoc filename
+                               file-assoc-list))))))
+#+end_src 
 
 * Key Bindings
 It might be nice to try to group all key binding settings in this
@@ -194,14 +194,18 @@ application.
   (global-set-key (kbd "C-c r") 'revert-buffer)
   (global-set-key (kbd "M-`") 'file-cache-minibuffer-complete)
   (global-set-key (kbd "C-x C-b") 'ibuffer)
-  (global-set-key (kbd "C-x f") 'recentf-ido-find-file)  
+  (global-set-key (kbd "C-x f") 'recentf-ido-find-file)
 #+end_src
 
 ** Window switching. (C-x o goes to the next window)
 #+begin_src emacs-lisp 
 (windmove-default-keybindings) ;; Shift+direction
-(global-set-key (kbd "C-x O") (lambda () (interactive) (other-window -1))) ;; back one
-(global-set-key (kbd "C-x C-o") (lambda () (interactive) (other-window 2))) ;; forward two
+(global-set-key (kbd "C-x O")
+                (lambda ()
+                  (interactive) (other-window -1))) ;; back one
+(global-set-key (kbd "C-x C-o")
+                (lambda ()
+                  (interactive) (other-window 2))) ;; forward two
 #+end_src
 
 ** Indentation help
@@ -228,7 +232,6 @@ want to make sure the contrib directory for org-mode is in my load
 path, though. I'll setup the mode-alist here, too (and possibly other
 top-level stuff later).
 
-
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
 ;; this probably isn't needed with the starter-kit
@@ -247,8 +250,10 @@ top-level stuff later).
 ** Local Org Keys
 I'm leaving this commented for now because I haven't pulled in
 org-pomodoro yet.
+Now, I'm adding it back in.
 #+BEGIN_SRC emacs-lisp
-;; (local-set-key "\C-co" 'org-pomodoro)
+(require 'org-pomodoro)
+(local-set-key "\C-co" 'org-pomodoro)
 #+END_SRC
 
 ** Org Directories and Special Files
@@ -259,7 +264,7 @@ views which you can see later on.
   (setq org-directory "~/org")
   (setq org-default-notes-file (concat org-directory "/notes.org"))
   (setq org-default-ideas-file (concat org-directory "/ideas.org"))
-  (setq org-agenda-files '("~/org"))
+  (setq org-agenda-files '("~/org" "~/org/work/mtp.org"))
   (setq org-refile-targets '((nil :maxlevel . 2)
                              (org-agenda-files :maxlevel . 1)))
 #+END_SRC
@@ -316,8 +321,8 @@ lately. I'll comment it out for now.
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-mode-hook (lambda () (abbrev-mode t)))
   (add-hook 'org-mode-hook (lambda () (remove-hook 'before-save-hook 'whitespace-cleanup)))
-  ;; (add-hook 'org-mode-hook 'auto-fill-mode)
-  ;; (add-hook 'org-capture-mode-hook 'auto-fill-mode)
+  (add-hook 'org-mode-hook 'auto-fill-mode)
+  (add-hook 'org-capture-mode-hook 'auto-fill-mode)
 #+END_SRC
 
 ** Org Tasks

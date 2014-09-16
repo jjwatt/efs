@@ -25,7 +25,6 @@
 (depends-on "clojure-mode")
 (depends-on "haskell-mode")
 (depends-on "markdown-mode")
-(depends-on "smartparens")
 (depends-on "js-comint")
 (depends-on "skewer-mode")
 (depends-on "geiser")
@@ -52,3 +51,5 @@
 (depends-on "subatomic256-theme")
 (depends-on "sublime-themes")
 (depends-on "cider")
+(depends-on "lua-mode")
+(depends-on "org-pomodoro")
