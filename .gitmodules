@@ -16,3 +16,6 @@
 [submodule "subs/slime"]
 	path = subs/slime
 	url = https://github.com/slime/slime.git
+[submodule "subs/org-pomodoro"]
+	path = subs/org-pomodoro
+	url = https://github.com/lolownia/org-pomodoro.git
