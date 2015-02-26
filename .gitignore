@@ -52,3 +52,10 @@ secret.org
 .emacs.desktop*
 .*~
 agent/*
+
+# Compiled
+*.elc
+
+# Packaging
+.cask
+
