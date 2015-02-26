@@ -38,7 +38,7 @@ git-org:
 	mkdir -p ./src
 	git clone git://orgmode.org/org-mode.git ./src/org-mode
 
-org-mode: git-org
+org-mode: ./src/org-mode 
 	cd src/org-mode && make autoloads
 
 cask:
