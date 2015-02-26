@@ -50,6 +50,6 @@ Cask: cask
 cask-install: cask 
 	./cask/bin/cask install
 
-cask-update: cask 
+cask-update: ./cask/bin/cask 
 	./cask/bin/cask update
 
