@@ -6,7 +6,7 @@
 	url = git://orgmode.org/org-mode.git
 [submodule "subs/pomo"]
 	path = subs/pomo
-	url = git@github.com:jjwatt/pomodoro-el.git
+	url = https://github.com/jjwatt/pomodoro-el.git
 [submodule "subs/pretty-symbols"]
 	path = subs/pretty-symbols
 	url = https://github.com/drothlis/pretty-symbols.git
