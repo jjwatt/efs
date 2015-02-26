@@ -39,7 +39,7 @@ git-org:
 	git clone git://orgmode.org/org-mode.git ./src/org-mode
 
 org-mode: git-org
-	cd org-mode && make autoloads
+	cd src/org-mode && make autoloads
 
 cask:
 	git clone https://github.com/cask/cask.git
@@ -47,9 +47,9 @@ cask:
 Cask: cask
 	PATH="./cask/bin:$(PATH)" && cask init
 
-cask-install: Cask
+cask-install: cask 
 	./cask/bin/cask install
 
-cask-update: cask Cask
+cask-update: cask 
 	./cask/bin/cask update
 
